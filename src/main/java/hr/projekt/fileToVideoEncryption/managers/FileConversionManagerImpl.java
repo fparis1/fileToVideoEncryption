@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,18 +29,18 @@ public class FileConversionManagerImpl implements FileConversionManager {
 
 
     @Override
-    public String convertFileToSignedVideo(MultipartFile file, String password, String name) {
+    public File convertFileToSignedVideo(MultipartFile file, String password, String name) {
         log.info("Conversion of file to signed video.");
 
         log.info("\t 1.Converting and encrypting file to binary images..");
         Pair<List<BufferedImage>, String> imagesAndName = fileConversionService.convertFileToImageList(file, password, name);
 
         log.info("\t 2. Converting images to video and uploading to Google Drive..");
-        String videoName = videoCreatingService.imageListToVideo(imagesAndName.getKey(), imagesAndName.getValue());
+        File videoFile = videoCreatingService.imageListToVideo(imagesAndName.getKey(), imagesAndName.getValue());
 
         log.info("\t    Conversion finished!");
 
-        return "videoName";
+        return videoFile;
     }
 
     @Override

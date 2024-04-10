@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class VideoCreatingServiceImpl implements VideoCreatingService{
     @Override
-    public String imageListToVideo(List<BufferedImage> imageList, String videoName) {
+    public File imageListToVideo(List<BufferedImage> imageList, String videoName) {
 
         log.info("\t \t Converting encrypted buffered images to video..");
 
@@ -29,8 +29,7 @@ public class VideoCreatingServiceImpl implements VideoCreatingService{
         log.info("\t \t Converting video to file..");
 
 
-        File file = new File(VideoConstants.TMP_STORAGE + videoName + VideoConstants.VIDEO_FORMAT);
-//        FileContent mediaContent = new FileContent(VideoConstants.MIME_TYPE, file);
-        return "success";
+        //        FileContent mediaContent = new FileContent(VideoConstants.MIME_TYPE, file);
+        return new File(VideoConstants.TMP_STORAGE + videoName + VideoConstants.VIDEO_FORMAT);
     }
 }
