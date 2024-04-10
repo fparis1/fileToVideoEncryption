@@ -4,7 +4,12 @@ import hr.projekt.fileToVideoEncryption.constants.PathParamConstants;
 import hr.projekt.fileToVideoEncryption.managers.FileConversionManager;
 import hr.projekt.fileToVideoEncryption.managers.FileConversionManagerImpl;
 import lombok.extern.log4j.Log4j2;
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -47,6 +52,27 @@ public class FileInputController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("video/mp4"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + videoFile.getName() + "\"")
+                .body(resource);
+    }
+
+    @PostMapping(path = PathParamConstants.RETRIEVE_FILE)
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Resource> retrieveFile(@RequestParam("password") String password, @RequestParam("video") MultipartFile video) throws IOException, MimeTypeException {
+        log.info("retrieveFile endpoint entered");
+
+        byte[] fileContent = fileConversionManager.convertSignedVideoToFile(video, password, video.getOriginalFilename());
+
+        Tika tika = new Tika();
+        String detectedType = tika.detect(fileContent);
+
+        MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
+        MimeType mimeType = allTypes.forName(detectedType);
+        String extension = mimeType.getExtension();
+
+        ByteArrayResource resource = new ByteArrayResource(fileContent);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(detectedType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "decryptedFile" + extension + "\"")
                 .body(resource);
     }
 

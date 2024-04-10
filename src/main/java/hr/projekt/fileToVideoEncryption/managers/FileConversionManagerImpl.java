@@ -44,20 +44,15 @@ public class FileConversionManagerImpl implements FileConversionManager {
     }
 
     @Override
-    public byte[] convertSignedVideoToFile(String videoName, String password) {
-        return new byte[0];
-    }
+    public byte[] convertSignedVideoToFile(MultipartFile video, String password, String videoName) {
+        log.info("Getting file from signed uploaded video.");
+        List<BufferedImage> imageList = videoCreatingService.videoToImageList(video);
+        log.info("\t 2. Decrypting images and converting them to a file..");
+        byte[] fileContent = fileConversionService.convertImageListToFile(imageList, password, videoName);
 
-//    @Override
-//    public byte[] convertSignedVideoToFile(String videoName, String password) {
-//        log.info("Getting file from signed uploaded video.");
-//
-//        log.info("\t 2. Decrypting images and converting them to a file..");
-//        byte[] fileContent = fileConversionService.convertImageListToFile(imageList, password, videoName);
-//
-//        log.info("\t    Retrieving file from Google Drive finished!");
-//
-//
-//        return fileContent;
-//    }
+        log.info("\t    Retrieving file from Google Drive finished!");
+
+
+        return fileContent;
+    }
 }

@@ -13,6 +13,7 @@ import org.jcodec.scale.AWTUtil;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,26 @@ public class VideoUtil {
 
         // Finalize the video encoding and close the encoder
         encoder.finish();
+    }
+
+    public static List<BufferedImage> videoBytesToImages(byte[] videoBytes) throws Exception {
+        // Create a temporary file from the video bytes
+        File tempFile = File.createTempFile("video", ".mp4");
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(videoBytes);
+            fos.flush();
+            fos.getFD().sync();
+        }
+
+        // Use the existing videoToImages method to convert the video file to images
+        List<BufferedImage> images = videoToImages(tempFile.getAbsolutePath());
+
+        // Delete the temporary file
+        if (!tempFile.delete()) {
+            System.out.println("Failed to delete temporary file");
+        }
+
+        return images;
     }
 
     public static List<BufferedImage> videoToImages(String videoPath) throws Exception {

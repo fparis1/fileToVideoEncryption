@@ -25,6 +25,6 @@ public interface FileConversionManager {
      * @param password key used to decyrpt data
      * @return byte[] of original file
      */
-    byte[] convertSignedVideoToFile(String videoName, String password);
+    byte[] convertSignedVideoToFile(MultipartFile video, String password, String videoName);
 
 }
