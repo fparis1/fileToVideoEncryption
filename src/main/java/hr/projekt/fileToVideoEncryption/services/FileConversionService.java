@@ -20,8 +20,9 @@ public interface FileConversionService {
     /**
      * This method is used for converting and decrypting image list to file
      *
-     * @param imageList images containing enrypted byte data, retreived from a video from Google drive storage
+     * @param imageList images containing encrypted byte data, retrieved from a video
      * @param password user's secret key which is used for decryption
+     * @param videoName name of the video
      * @return byte[] of file that was made from conversion
      */
     byte[] convertImageListToFile(List<BufferedImage> imageList, String password, String videoName);

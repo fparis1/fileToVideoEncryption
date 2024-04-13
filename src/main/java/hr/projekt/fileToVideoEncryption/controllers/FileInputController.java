@@ -4,6 +4,7 @@ import hr.projekt.fileToVideoEncryption.constants.PathParamConstants;
 import hr.projekt.fileToVideoEncryption.managers.FileConversionManager;
 import hr.projekt.fileToVideoEncryption.managers.FileConversionManagerImpl;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
@@ -47,6 +48,8 @@ public class FileInputController {
         // Prepare a resource pointing to the video file
         Path path = Paths.get(videoFile.getAbsolutePath());
         InputStreamResource resource = new InputStreamResource(Files.newInputStream(path));
+
+        FileUtils.cleanDirectory(path.getParent().toFile());
 
         // Prepare and return the response
         return ResponseEntity.ok()

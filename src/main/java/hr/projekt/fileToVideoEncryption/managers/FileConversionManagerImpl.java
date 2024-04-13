@@ -35,7 +35,7 @@ public class FileConversionManagerImpl implements FileConversionManager {
         log.info("\t 1.Converting and encrypting file to binary images..");
         Pair<List<BufferedImage>, String> imagesAndName = fileConversionService.convertFileToImageList(file, password, name);
 
-        log.info("\t 2. Converting images to video and uploading to Google Drive..");
+        log.info("\t 2. Converting images to video");
         File videoFile = videoCreatingService.imageListToVideo(imagesAndName.getKey(), imagesAndName.getValue());
 
         log.info("\t    Conversion finished!");
@@ -45,12 +45,12 @@ public class FileConversionManagerImpl implements FileConversionManager {
 
     @Override
     public byte[] convertSignedVideoToFile(MultipartFile video, String password, String videoName) {
-        log.info("Getting file from signed uploaded video.");
+        log.info("Getting file from signed video.");
         List<BufferedImage> imageList = videoCreatingService.videoToImageList(video);
         log.info("\t 2. Decrypting images and converting them to a file..");
         byte[] fileContent = fileConversionService.convertImageListToFile(imageList, password, videoName);
 
-        log.info("\t    Retrieving file from Google Drive finished!");
+        log.info("\t    Retrieving file finished!");
 
 
         return fileContent;
